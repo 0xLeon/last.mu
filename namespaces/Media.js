@@ -1,0 +1,4 @@
+/* 
+ * Media Namespace
+ */
+var Media = { };
