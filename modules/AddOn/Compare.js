@@ -26,7 +26,8 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 		this.posts.each(function(post) {
 			var match = post.text.match(/last(?:\.fm|fm(?:\.[A-Za-z]{2,3})+)\/user\/(.*)(?:\s|$)/);
 			
-			if (!!match) {
+			// TODO: remove hardcoded own last.fm username
+			if (!!match && (match[1].toLowerCase() !== this.storage.getValue('lastfmUsername', 'Leon_-').toLowerCase())) {
 				this.compareTaste(match[1], post.postID);
 			}
 		}, this);
