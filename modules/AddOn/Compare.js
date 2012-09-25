@@ -35,7 +35,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	compareTaste: function(username, postID) {
 		var cachedData = this.cacheStorage.getValue(username.toLowerCase());
 		
-		if (!!cachedData && ((Math.floor((new Date()).getTime() / 1000) - cachedData.time) > 604800)) {
+		if (!cachedData || ((Math.floor((new Date()).getTime() / 1000) - cachedData.time) > 604800)) {
 			this.compareOnline(username, postID);
 		}
 		else {
