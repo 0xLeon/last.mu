@@ -18,6 +18,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	addStyleRules: function() {
 		Style.addNode('.postContainer { clear: both; }');
 		Style.addNode('.post { float: left; }');
+		// TODO: make this work
 		Style.addNode('.lastmuInfo { margin-left: 5px; padding-left: 5px; }');
 	},
 	
@@ -49,6 +50,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	compareOnline: function(username, postID) {
 		GM_xmlhttpRequest({
 			method: 'GET',
+			// TODO: remove hardcoded own last.fm username
 			url: 'http://ws.audioscrobbler.com/2.0/?method=tasteometer.compare&type1=user&type2=user&api_key=f27f59e52cce2ed5fd8bbd412c7165bf&limit=5&value1=' + encodeURIComponent(this.storage.getValue('lastfmUsername', 'Leon_-')) + '&value2=' + username,
 			headers: {
 				'Accept': 'application/atom+xml,application/xml,text/xml'
