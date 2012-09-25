@@ -61,3 +61,4 @@ requirements/*.tar.gz
 screenshots/
 project.diff
 project.log
+build.cmd
