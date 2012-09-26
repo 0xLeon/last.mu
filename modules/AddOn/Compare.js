@@ -23,14 +23,15 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	},
 	
 	buildUI: function() {
-		this.posts.each(function(post) {
-			var match = post.text.match(/last(?:\.fm|fm(?:\.[A-Za-z]{2,3})+)\/user\/(.*)(?:\s|$)/);
-			
-			// TODO: remove hardcoded own last.fm username
-			if (!!match && (match[1].toLowerCase() !== this.storage.getValue('lastfmUsername', 'Leon_-').toLowerCase())) {
-				this.compareTaste(match[1], post.postID);
-			}
-		}, this);
+		if (this.storage.getValue('lastfmUsername')) {
+			this.posts.each(function(post) {
+				var match = post.text.match(/last(?:\.fm|fm(?:\.[A-Za-z]{2,3})+)\/user\/(.*)(?:\s|$)/);
+				
+				if (!!match && (match[1].toLowerCase() !== this.storage.getValue('lastfmUsername').toLowerCase())) {
+					this.compareTaste(match[1], post.postID);
+				}
+			}, this);
+		}
 	},
 	
 	compareTaste: function(username, postID) {
@@ -51,8 +52,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	compareOnline: function(username, postID) {
 		GM_xmlhttpRequest({
 			method: 'GET',
-			// TODO: remove hardcoded own last.fm username
-			url: 'http://ws.audioscrobbler.com/2.0/?method=tasteometer.compare&type1=user&type2=user&api_key=f27f59e52cce2ed5fd8bbd412c7165bf&limit=5&value1=' + encodeURIComponent(this.storage.getValue('lastfmUsername', 'Leon_-')) + '&value2=' + username,
+			url: 'http://ws.audioscrobbler.com/2.0/?method=tasteometer.compare&type1=user&type2=user&api_key=f27f59e52cce2ed5fd8bbd412c7165bf&limit=5&value1=' + encodeURIComponent(this.storage.getValue('lastfmUsername')) + '&value2=' + username,
 			headers: {
 				'Accept': 'application/atom+xml,application/xml,text/xml'
 			},
