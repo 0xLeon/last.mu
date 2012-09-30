@@ -16,10 +16,9 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	},
 	
 	addStyleRules: function() {
-		Style.addNode('.postContainer { clear: both; }');
-		Style.addNode('.post { float: left; }');
-		// TODO: make this work
-		Style.addNode('.lastmuInfo { margin-left: 5px; padding-left: 5px; }');
+		Style.addNode('.post[class~="reply"] { min-width: 50% !important; }');
+		Style.addNode('.lastmuSideArrows { color: transparent !important; }');
+		Style.addNode('.lastmuInfo > p { margin: 5px !important; }');
 	},
 	
 	buildUI: function() {
@@ -87,10 +86,12 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	},
 	
 	insertComparisonResult: function(postID, username, score, stats, commonArtists) {
-		var infoBox = new Element('div', { id: 'lastmuInfo' + postID, 'class': 'post reply lastmuInfo' });
+		var sideArrows = new Element('div', { 'class': 'sideArrows lastmuSideArrows' });
+		var infoBox = new Element('div', { id: 'lastmuInfo' + postID, 'class': 'post reply lastmuInfo', style: 'width: ' + Element.getStyle($('p' + postID), 'width') + ' !important;' });
 		var commonArtistsNode = new Element('p', { style: 'font-size: 0.8em;' });
 		var commonArtistsText = '';
 		
+		sideArrows.appendChild(document.createTextNode('>>'));
 		infoBox.innerHTML = "<p>Your musical compatibility with <a target='_blank' href='http://www.last.fm/user/" + username + "'>" + username + "</a> is <strong style='color:" + stats.color + "'>" + stats.name.toUpperCase() + "</strong></p>";
 		
 		if (!!commonArtists.length) {
@@ -112,6 +113,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 			infoBox.appendChild(commonArtistsNode);
 		}
 		
+		$('pc' + postID).appendChild(sideArrows);
 		$('pc' + postID).appendChild(infoBox);
 	},
 	
