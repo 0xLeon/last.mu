@@ -47,7 +47,13 @@ var Lastmu = new ClassSystem.Class((function() {
 	
 	function buildUI() {
 		this.buildUIPanel('lastmuSettings', 'last.mu', function(contentDiv) {
-			contentDiv.appendChild(document.createTextNode('test content'));
+			var settingsList = new Element('ul', { id: 'lastmuSettingsGeneral' });
+			var generalSettingsCategoryListItem = new Element('li', { 'class': 'settings-cat' });
+			
+			generalSettingsCategoryListItem.appendChild(document.createTextNode('General'));
+			
+			settingsList.appendChild(generalSettingsCategoryListItem);
+			contentDiv.appendChild(settingsList);
 		});
 	}
 	
@@ -109,6 +115,29 @@ var Lastmu = new ClassSystem.Class((function() {
 		$$('body')[0].appendChild(panelDiv);
 	}
 	
+	function registerBoolOption(optionID, optionTitle, defaultValue, switchCallback, context) {
+		if (!!$(optionID)) throw new Error('optionID \''+optionID+'\' already used');
+		
+		var optionListElement = new Element('li');
+		var optionLabel = new Element('label', { 'for': optionID });
+		var optionInput = new Element('input', { id: optionID, 'class': 'menuOption', 'type': 'checkbox' });
+		
+		optionInput.addEventListener('change', function(event) {
+			if (Object.isFunction(switchCallback) && !switchCallback.call(context, event, event.target.checked)) {
+				event.target.checked = !event.target.checked;
+			}
+			
+			this.storage.setValue(event.target.getAttribute('id') + 'Status', event.target.checked);
+		}.bindAsEventListener(this), true);
+		
+		optionInput.checked = this.storage.getValue(optionID + 'Status', defaultValue);
+		optionLabel.appendChild(optionInput);
+		optionLabel.appendChild(document.createTextNode(' ' + optionTitle));
+		optionListElement.appendChild(optionLabel);
+		
+		$('lastmuSettingsGeneral').appendChild(optionListElement);
+	}
+	
 	/**
 	 * Returns the URI where the update server for this application is located
 	 * 
@@ -148,6 +177,7 @@ var Lastmu = new ClassSystem.Class((function() {
 		initModules:		initModules,
 		
 		buildUIPanel:		buildUIPanel,
+		registerBoolOption:	registerBoolOption,
 		getUpdateServer:	getUpdateServer,
 		getVersion:		getVersion,
 		getUpdateCallback:	getUpdateCallback
