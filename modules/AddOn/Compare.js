@@ -16,7 +16,6 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	},
 	
 	addStyleRules: function() {
-		Style.addNode('.post[class~="reply"] { min-width: 50% !important; }');
 		Style.addNode('.lastmuSideArrows { color: transparent !important; }');
 		Style.addNode('.lastmuInfo > p { margin: 5px !important; }');
 	},
@@ -87,9 +86,11 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	
 	insertComparisonResult: function(postID, username, score, stats, commonArtists) {
 		var sideArrows = new Element('div', { 'class': 'sideArrows lastmuSideArrows' });
-		var infoBox = new Element('div', { id: 'lastmuInfo' + postID, 'class': 'post reply lastmuInfo', style: 'width: ' + Element.getStyle($('p' + postID), 'width') + ' !important;' });
+		var infoBox = new Element('div', { id: 'lastmuInfo' + postID, 'class': 'post reply lastmuInfo' });
 		var commonArtistsNode = new Element('p', { style: 'font-size: 0.8em;' });
 		var commonArtistsText = '';
+		var postWidth = 0;
+		var infoWidth = 0;
 		
 		sideArrows.appendChild(document.createTextNode('>>'));
 		infoBox.innerHTML = "<p>Your musical compatibility with <a target='_blank' href='http://www.last.fm/user/" + username + "'>" + username + "</a> is <strong style='color:" + stats.color + "'>" + stats.name.toUpperCase() + "</strong></p>";
@@ -115,6 +116,16 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 		
 		$('pc' + postID).appendChild(sideArrows);
 		$('pc' + postID).appendChild(infoBox);
+		
+		postWidth = parseFloat(Element.getStyle($('p' + postID), 'width'));
+		infoWidth = parseFloat(Element.getStyle($('lastmuInfo' + postID), 'width'));
+		
+		if (postWidth > infoWidth) {
+			infoBox.style.width = postWidth.toString() + 'px';
+		}
+		else {
+			$('p' + postID).style.width = infoWidth.toString() + 'px';
+		}
 	},
 	
 	getCompatibilityStats: function(score) {
