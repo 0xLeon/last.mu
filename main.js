@@ -119,8 +119,8 @@ var Lastmu = new ClassSystem.Class((function() {
 			contentBuilder.call(context, contentDiv);
 		}
 		
-		$('navtopright').insertBefore(windowLink, $$('#navtopright > a:last-child')[0]);
-		$('navtopright').insertBefore(document.createTextNode('] ['), $$('#navtopright > a:last-child')[0]);
+		$('navtopright').insertBefore(windowLink, $$('#navtopright > a:nth-last-of-type(1)')[0]);
+		$('navtopright').insertBefore(document.createTextNode('] ['), $$('#navtopright > a:nth-last-of-type(1)')[0]);
 		
 		$$('body')[0].appendChild(panelDiv);
 	}
