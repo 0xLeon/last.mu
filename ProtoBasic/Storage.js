@@ -159,22 +159,32 @@ var Storage = (function() {
 		global: new StorageInterface('.')
 	};
 	
-	function getInterface(namespaceString) {
-		namespaceString = String.interpret(namespaceString).toLowerCase();
+	function getInterface() {
+		if (arguments.length < 1) {
+			throw new Error('No namespace given');
+		}
 		
-		if (namespaceString === '') {
+		if ((arguments.length === 1) && (arguments[0] === '')) {
 			return namespaces.noNamespace;
 		}
-		
-		if (namespaceString === '.') {
+		else if ((arguments.length === 1) && (arguments[0] === '.')) {
 			return namespaces.global;
 		}
-		
-		if (Object.isUndefined(namespaces[namespaceString])) {
-			namespaces[namespaceString] = new StorageInterface(namespaceString);
+		else {
+			var namespace = '';
+			
+			$A(arguments).each(function(namespaceItem) {
+				namespace += '.' + namespaceItem;
+			});
+			
+			namespace += '.'
+			
+			if (Object.isUndefined(namespaces[namespace])) {
+				namespaces[namespace] = new StorageInterface(namespace);
+			}
+			
+			return namespaces[namespace];
 		}
-		
-		return namespaces[namespaceString];
 	}
 	
 	return {

@@ -5,7 +5,7 @@
 Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	initializeVariables: function() {
 		this.posts = [];
-		this.cacheStorage = Storage.getInterface(this.storage.namespace + '.compatibilityCache');
+		this.cacheStorage = Storage.getInterface('lastmu', 'compatibilityCache');
 		
 		$$('.post').each(function(post) {
 			this.posts.push({
