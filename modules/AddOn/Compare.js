@@ -24,6 +24,12 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 		this.callerObj.registerBoolOption('compare', 'Compare taste in posts', true);
 	},
 	
+	addListeners: function() {
+		Event.register('lastfmUsernameChange', function(event) {
+			this.cacheStorage.clear();
+		}, this);
+	},
+	
 	buildUI: function() {
 		if (this.storage.getValue('lastfmUsernameValue') && this.storage.getValue('compareStatus')) {
 			this.posts.each(function(post) {
