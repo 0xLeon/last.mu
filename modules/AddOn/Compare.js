@@ -25,11 +25,11 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	},
 	
 	buildUI: function() {
-		if (this.storage.getValue('lastfmUsername') && this.storage.getValue('compareStatus')) {
+		if (this.storage.getValue('lastfmUsernameValue') && this.storage.getValue('compareStatus')) {
 			this.posts.each(function(post) {
 				var match = post.text.match(/last(?:\.fm|fm(?:\.[A-Za-z]{2,3})+)\/user\/(.*)(?:\s|$)/);
 				
-				if (!!match && (match[1].toLowerCase() !== this.storage.getValue('lastfmUsername').toLowerCase())) {
+				if (!!match && (match[1].toLowerCase() !== this.storage.getValue('lastfmUsernameValue').toLowerCase())) {
 					this.compareTaste(match[1], post.postID);
 				}
 			}, this);
@@ -54,7 +54,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 	compareOnline: function(username, postID) {
 		GM_xmlhttpRequest({
 			method: 'GET',
-			url: 'http://ws.audioscrobbler.com/2.0/?method=tasteometer.compare&type1=user&type2=user&api_key=f27f59e52cce2ed5fd8bbd412c7165bf&limit=5&value1=' + encodeURIComponent(this.storage.getValue('lastfmUsername')) + '&value2=' + username,
+			url: 'http://ws.audioscrobbler.com/2.0/?method=tasteometer.compare&type1=user&type2=user&api_key=f27f59e52cce2ed5fd8bbd412c7165bf&limit=5&value1=' + encodeURIComponent(this.storage.getValue('lastfmUsernameValue')) + '&value2=' + username,
 			headers: {
 				'Accept': 'application/atom+xml,application/xml,text/xml'
 			},
