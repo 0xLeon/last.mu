@@ -26,6 +26,7 @@ var Lastmu = new ClassSystem.Class((function() {
 	
 	function initialize() {
 		this.initCoreModules();
+		this.addStyleRules();
 		this.buildUI();
 		
 		Window.addEventListener('load', function(event) {
@@ -43,6 +44,10 @@ var Lastmu = new ClassSystem.Class((function() {
 				Window.alert('Couldn\'t initialze core module »'+pair.key+'«.'+"\n"+e.name+' - '+e.message);
 			}
 		}, this);
+	}
+	
+	function addStyleRules() {
+		Style.addNode('.hidden { display: none; height: 0; overflow: hidden; position: absolute; left: -9000px; max-width: 8000px; }');
 	}
 	
 	function buildUI() {
@@ -138,6 +143,49 @@ var Lastmu = new ClassSystem.Class((function() {
 		$('lastmuSettingsGeneral').appendChild(optionListElement);
 	}
 	
+	function registerTextOption(optionID, optionTitle, defaultValue, changeCallback, context) {
+		if (!!$(optionID)) throw new Error('optionID \''+optionID+'\' already used');
+		
+		var optionValue = ((!!this.storage.getValue(optionID + 'Value', defaultValue)) ? this.storage.getValue(optionID + 'Value', defaultValue) : 'Not set yet');
+		var optionListElement = new Element('li');
+		var optionSpan = new Element('span', { id: optionID, 'class': 'textOptionValue', title: 'Click to change' });
+		var optionInput = new Element('input', { id: optionID + 'Input', 'class': 'menuOption hidden', 'type': 'text', size: '8', autocomplete: 'off', value: optionValue });
+		
+		optionSpan.addEventListener('click', function(event) {
+			Element.addClassName(event.target, 'hidden');
+			Element.removeClassName(event.target.nextSibling, 'hidden');
+			event.target.nextSibling.focus();
+		}, true);
+		
+		optionInput.addEventListener('focus', function(event) {
+			event.target.select();
+		}, true);
+		
+		optionInput.addEventListener('keydown', function(event) {
+			if ((event.keyCode === Event.keys.KEY_RETURN) && (event.target.value.length > 0)) {
+				var optionSpan = event.target.previousSibling;
+				var optionInput = event.target;
+				
+				this.storage.setValue(optionSpan.getAttribute('id') + 'Value', optionInput.value);
+				optionSpan.firstChild.replaceData(0, optionSpan.firstChild.nodeValue.length, this.storage.getValue(optionSpan.getAttribute('id') + 'Value'));
+				
+				Element.addClassName(optionInput, 'hidden');
+				Element.removeClassName(optionSpan, 'hidden');
+				
+				if (Object.isFunction(changeCallback)) changeCallback.call(context, optionInput.value);
+				
+				event.preventDefault();
+			}
+		}.bindAsEventListener(this), true);
+		
+		optionSpan.appendChild(document.createTextNode(optionValue));
+		optionListElement.appendChild(document.createTextNode(optionTitle + ': '));
+		optionListElement.appendChild(optionSpan);
+		optionListElement.appendChild(optionInput);
+		
+		$('lastmuSettingsGeneral').appendChild(optionListElement);
+	}
+	
 	/**
 	 * Returns the URI where the update server for this application is located
 	 * 
@@ -172,12 +220,14 @@ var Lastmu = new ClassSystem.Class((function() {
 		
 		initialize:		initialize,
 		initCoreModules:	initCoreModules,
+		addStyleRules:		addStyleRules,
 		buildUI:		buildUI,
 		finish:			finish,
 		initModules:		initModules,
 		
 		buildUIPanel:		buildUIPanel,
 		registerBoolOption:	registerBoolOption,
+		registerTextOption:	registerTextOption,
 		getUpdateServer:	getUpdateServer,
 		getVersion:		getVersion,
 		getUpdateCallback:	getUpdateCallback
