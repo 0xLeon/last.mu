@@ -20,8 +20,12 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 		Style.addNode('.lastmuInfo > p { margin: 5px !important; }');
 	},
 	
+	registerOptions: function() {
+		this.callerObj.registerBoolOption('compare', 'Compare taste in posts', true);
+	},
+	
 	buildUI: function() {
-		if (this.storage.getValue('lastfmUsername')) {
+		if (this.storage.getValue('lastfmUsername') && this.storage.getValue('compareStatus')) {
 			this.posts.each(function(post) {
 				var match = post.text.match(/last(?:\.fm|fm(?:\.[A-Za-z]{2,3})+)\/user\/(.*)(?:\s|$)/);
 				
