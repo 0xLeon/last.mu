@@ -60,6 +60,11 @@ var Lastmu = new ClassSystem.Class((function() {
 			settingsList.appendChild(generalSettingsCategoryListItem);
 			contentDiv.appendChild(settingsList);
 		});
+		this.registerTextOption('lastfmUsername', 'last.fm username', null, function(value) {
+			Event.fire('lastfmUsernameChange', {
+				newUsername: value
+			});
+		});
 	}
 	
 	function finish() {
