@@ -138,6 +138,14 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 		else {
 			$('p' + postID).style.width = infoWidth.toString() + 'px';
 		}
+		
+		Event.fire('comparisonResult', {
+			postID: postID,
+			username: username,
+			score: score,
+			stats: stats.clone(),
+			commonArtists: commonArtists.clone()
+		});
 	},
 	
 	getCompatibilityStats: function(score) {
