@@ -146,7 +146,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 			color: '#000'
 		};
 		
-		if (score > 0) {
+		if (score >= 0) {
 			if (score < 0.10) {
 				result.name = 'Very Low';
 				result.color = '#9A9A9A';
