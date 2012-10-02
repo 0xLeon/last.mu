@@ -68,6 +68,8 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 				var lastfmXML = (new DOMParser()).parseFromString(response.responseText, 'application/xml');
 				
 				if ((response.status == 200) && lastfmXML.querySelector('score')) {
+					username = lastfmXML.querySelectorAll('input > user')[1].firstChild.nodeValue;
+					
 					var score = parseFloat(lastfmXML.querySelector('score').firstChild.nodeValue);
 					var stats = this.getCompatibilityStats(score);
 					var commonArtists = [];
@@ -103,7 +105,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 		var infoWidth = 0;
 		
 		sideArrows.appendChild(document.createTextNode('>>'));
-		infoBox.innerHTML = "<p>Your musical compatibility with <a target='_blank' href='http://www.last.fm/user/" + username + "'>" + username + "</a> is <strong style='color:" + stats.color + "'>" + stats.name.toUpperCase() + "</strong></p>";
+		infoBox.innerHTML = "<p>Your musical compatibility with <a target='_blank' href='http://www.last.fm/user/" + encodeURIComponent(username) + "'>" + username.escapeHTML() + "</a> is <strong style='color:" + stats.color + "'>" + stats.name.toUpperCase() + "</strong></p>";
 		
 		if (!!commonArtists.length) {
 			commonArtists.each(function(name, index) {
@@ -120,7 +122,7 @@ Modules.AddOn.Compare = new ClassSystem.Class(Modules.Util.AbstractModule, {
 				}
 			});
 			
-			commonArtistsNode.innerHTML = 'Music you have in common includes ' + commonArtistsText;
+			commonArtistsNode.innerHTML = 'Music you have in common includes ' + commonArtistsText.escapeHTML();
 			infoBox.appendChild(commonArtistsNode);
 		}
 		
